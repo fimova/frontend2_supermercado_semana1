@@ -1,38 +1,80 @@
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, NavLink } from 'react-router-dom'
+
+const clasesNavLink = ({ isActive }) =>
+  `block px-3 py-2 no-underline transition-colors ${isActive
+    ? 'text-white font-semibold underline'
+    : 'text-white/70 hover:text-white'
+  }`
 
 function Navbar() {
+  const [menuAbierto, setMenuAbierto] = useState(false)
+
+  const cerrarMenu = () => setMenuAbierto(false)
+
   return (
-    <nav className="navbar navbar-expand-lg navbar-custom navbar-dark">
-      <div className="container">
-        <Link className="navbar-brand" to="/">
+    <nav className="bg-chocolate text-white">
+      <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between px-3 py-2">
+        <Link
+          className="py-2 text-xl font-semibold text-white no-underline"
+          to="/"
+          onClick={cerrarMenu}
+        >
           SuperInventario
         </Link>
 
         <button
-          className="navbar-toggler"
           type="button"
-          data-bs-toggle="collapse"
-          data-bs-target="#navbarNav"
+          className="rounded border border-white/25 px-3 py-1 text-white/80 transition-colors hover:text-white md:hidden"
+          aria-controls="navbarNav"
+          aria-expanded={menuAbierto}
+          aria-label="Abrir menú de navegación"
+          onClick={() => setMenuAbierto(!menuAbierto)}
         >
-          <span className="navbar-toggler-icon" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
         </button>
 
-        <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav ms-auto">
-            <li className="nav-item">
-              <Link className="nav-link" to="/">
+        <div
+          id="navbarNav"
+          className={`${menuAbierto ? 'block' : 'hidden'} w-full md:block md:w-auto`}
+        >
+          <ul className="m-0 flex list-none flex-col gap-1 p-0 md:ml-auto md:flex-row md:items-center md:gap-0">
+            <li>
+              <NavLink
+                to="/"
+                end
+                className={clasesNavLink}
+                onClick={cerrarMenu}
+              >
                 Inicio
-              </Link>
+              </NavLink>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/quienes-somos">
+            <li>
+              <NavLink
+                to="/quienes-somos"
+                className={clasesNavLink}
+                onClick={cerrarMenu}
+              >
                 Quiénes somos
-              </Link>
+              </NavLink>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/contacto">
+            <li>
+              <NavLink
+                to="/contacto"
+                className={clasesNavLink}
+                onClick={cerrarMenu}
+              >
                 Contáctanos
-              </Link>
+              </NavLink>
             </li>
           </ul>
         </div>

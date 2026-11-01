@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import CampoFormulario from '../components/CampoFormulario'
+import { validarFormularioContacto } from '../utils/validaciones'
 
 function Contacto() {
   const [formData, setFormData] = useState({
@@ -7,157 +9,87 @@ function Contacto() {
     mensaje: '',
   })
 
-  const [mensajeFormulario, setMensajeFormulario] = useState({
+  const [mensaje, setMensaje] = useState({
     texto: '',
-    clase: '',
+    tipo: '', // 'error' | 'exito' | ''
   })
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    setFormData({
-      ...formData,
-      [name]: value,
-    })
+    setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    const { nombre, correo, mensaje } = formData
+    const resultado = validarFormularioContacto(formData)
 
-    // Validar nombre vacío
-    if (nombre.trim() === '') {
-      setMensajeFormulario({
-        texto: 'Por favor ingrese su nombre',
-        clase: 'alert alert-danger mt-3',
-      })
-      return
-    }
-
-    // Validar nombre muy corto
-    if (nombre.trim().length < 3) {
-      setMensajeFormulario({
-        texto: 'El nombre debe tener al menos 3 caracteres',
-        clase: 'alert alert-danger mt-3',
-      })
-      return
-    }
-
-    // Validar correo vacío
-    if (correo.trim() === '') {
-      setMensajeFormulario({
-        texto: 'El correo no puede estar vacío',
-        clase: 'alert alert-danger mt-3',
-      })
-      return
-    }
-
-    // Validar formato de correo
-    const formatoCorreo = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!formatoCorreo.test(correo)) {
-      setMensajeFormulario({
-        texto: 'Por favor ingrese un correo válido',
-        clase: 'alert alert-danger mt-3',
-      })
-      return
-    }
-
-    // Validar mensaje vacío
-    if (mensaje.trim() === '') {
-      setMensajeFormulario({
-        texto: 'Por favor escriba su mensaje',
-        clase: 'alert alert-danger mt-3',
-      })
-      return
-    }
-
-    // Validar mensaje muy corto
-    if (mensaje.trim().length < 10) {
-      setMensajeFormulario({
-        texto: 'El mensaje debe tener al menos 10 caracteres',
-        clase: 'alert alert-danger mt-3',
-      })
-      return
-    }
-
-    // Si pasa todas las validaciones
-    setMensajeFormulario({
-      texto: '¡Mensaje enviado correctamente!',
-      clase: 'alert alert-success mt-3',
+    setMensaje({
+      texto: resultado.mensaje,
+      tipo: resultado.tipo,
     })
 
-    // Limpiar formulario
-    setFormData({
-      nombre: '',
-      correo: '',
-      mensaje: '',
-    })
+    if (resultado.tipo === 'exito') {
+      setFormData({
+        nombre: '',
+        correo: '',
+        mensaje: '',
+      })
+    }
   }
 
+  const claseMensaje =
+    mensaje.tipo === 'error'
+      ? 'mt-4 rounded-md bg-red-100 px-4 py-2 text-sm text-red-800'
+      : mensaje.tipo === 'exito'
+        ? 'mt-4 rounded-md bg-emerald-100 px-4 py-2 text-sm text-emerald-800'
+        : ''
+
   return (
-    <div className="row justify-content-center">
-      <div className="col-lg-6">
-        <h2 className="mb-3">Contáctanos</h2>
-        <p className="mb-4">
-          ¿Tienes dudas o quieres probar SuperInventario en tu supermercado?
-          Escríbenos:
-        </p>
+    <div className="mx-auto max-w-lg">
+      <h2 className="mb-3 text-2xl font-semibold text-sea-pine">
+        Contáctanos
+      </h2>
+      <p className="mb-6 text-sm text-gray-700">
+        ¿Tienes dudas o quieres probar SuperInventario en tu supermercado?
+        Escríbenos:
+      </p>
 
-        <form onSubmit={handleSubmit} noValidate>
-          <div className="mb-3">
-            <label htmlFor="nombre" className="form-label">
-              Nombre
-            </label>
-            <input
-              type="text"
-              id="nombre"
-              name="nombre"
-              className="form-control"
-              value={formData.nombre}
-              onChange={handleChange}
-            />
-          </div>
+      <form onSubmit={handleSubmit} noValidate>
+        <CampoFormulario
+          label="Nombre"
+          id="nombre"
+          name="nombre"
+          value={formData.nombre}
+          onChange={handleChange}
+        />
 
-          <div className="mb-3">
-            <label htmlFor="correo" className="form-label">
-              Correo electrónico
-            </label>
-            <input
-              type="email"
-              id="correo"
-              name="correo"
-              className="form-control"
-              value={formData.correo}
-              onChange={handleChange}
-            />
-          </div>
+        <CampoFormulario
+          label="Correo electrónico"
+          id="correo"
+          name="correo"
+          type="email"
+          value={formData.correo}
+          onChange={handleChange}
+        />
 
-          <div className="mb-3">
-            <label htmlFor="mensaje" className="form-label">
-              Mensaje
-            </label>
-            <textarea
-              id="mensaje"
-              name="mensaje"
-              rows="4"
-              className="form-control"
-              value={formData.mensaje}
-              onChange={handleChange}
-            />
-          </div>
+        <CampoFormulario
+          label="Mensaje"
+          id="mensaje"
+          name="mensaje"
+          as="textarea"
+          value={formData.mensaje}
+          onChange={handleChange}
+        />
 
-          <button type="submit" className="btn btn-primary">
-            Enviar mensaje
-          </button>
-        </form>
+        <button type="submit" className="btn-primario">
+          Enviar mensaje
+        </button>
+      </form>
 
-        {/* Renderizado condicional del mensaje debajo del formulario */}
-        {mensajeFormulario.texto && (
-          <div id="mensajeFormulario" className={mensajeFormulario.clase}>
-            {mensajeFormulario.texto}
-          </div>
-        )}
-      </div>
+      {mensaje.texto && (
+        <div className={claseMensaje}>{mensaje.texto}</div>
+      )}
     </div>
   )
 }
