@@ -1,57 +1,66 @@
+import { useState } from 'react'
 import { useArticulos } from '../hooks/useArticulos'
+import ArticulosTable from '../components/ArticulosTable'
+import { categorias } from '../data/categorias'
+import {
+    TODAS_LAS_CATEGORIAS,
+    filtrarArticulosPorTipo,
+} from '../utils/filtrosArticulos'
 
 function ListaArticulos() {
     const { articulos } = useArticulos()
+    const [categoriaSeleccionada, setCategoriaSeleccionada] = useState(
+        TODAS_LAS_CATEGORIAS,
+    )
+
+    const articulosFiltrados = filtrarArticulosPorTipo(
+        articulos,
+        categoriaSeleccionada,
+    )
 
     return (
-        <div className="mx-auto max-w-4xl">
-            <h2 className="mb-3 text-2xl font-semibold text-sea-pine">
+        <section className="mx-auto max-w-6xl">
+            <h1 className="mb-3 text-2xl font-semibold text-sea-pine">
                 Artículos disponibles
-            </h2>
-            <p className="mb-6 text-sm text-gray-700">
-                Esta tabla muestra todos los artículos registrados.
+            </h1>
+
+            <div className="mb-5 max-w-sm">
+                <label
+                    htmlFor="filtro-categoria"
+                    className="mb-1 block text-sm font-medium text-slate-800"
+                >
+                    Filtrar por categoría
+                </label>
+
+                <select
+                    id="filtro-categoria"
+                    value={categoriaSeleccionada}
+                    onChange={(e) => setCategoriaSeleccionada(e.target.value)}
+                    className="w-full rounded-md border border-slate-300 bg-white px-3 py-2"
+                >
+                    <option value={TODAS_LAS_CATEGORIAS}>Todas las categorías</option>
+                    {categorias.map((categoria) => (
+                        <option key={categoria} value={categoria}>
+                            {categoria}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
+            <p className="mb-3 text-sm text-slate-600" aria-live="polite">
+                Mostrando {articulosFiltrados.length} de {articulos.length} artículos.
             </p>
 
-            {articulos.length === 0 ? (
-                <p className="text-sm text-gray-600">
-                    No hay artículos registrados en el inventario.
+            {articulosFiltrados.length === 0 ? (
+                <p className="rounded-lg border border-black/10 bg-white p-4 text-slate-700">
+                    {articulos.length === 0
+                        ? 'Aún no hay artículos en el inventario.'
+                        : 'No hay artículos en esta categoría.'}
                 </p>
             ) : (
-                <div className="overflow-x-auto rounded-lg border border-black/10 bg-white shadow-sm">
-                    <table className="w-full border-collapse text-left text-sm">
-                        <thead>
-                            <tr className="border-b-2 border-slate-200 bg-slate-50 text-slate-700">
-                                <th className="px-3 py-2 font-semibold">ID</th>
-                                <th className="px-3 py-2 font-semibold">Nombre</th>
-                                <th className="px-3 py-2 font-semibold">Marca</th>
-                                <th className="px-3 py-2 font-semibold">Tipo</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {articulos.map((articulo) => (
-                                <tr
-                                    key={articulo.id}
-                                    className="border-b border-slate-200 last:border-0"
-                                >
-                                    <td className="px-3 py-2 align-middle text-slate-700">
-                                        {articulo.id}
-                                    </td>
-                                    <td className="px-3 py-2 align-middle text-slate-900">
-                                        {articulo.nombre}
-                                    </td>
-                                    <td className="px-3 py-2 align-middle text-slate-800">
-                                        {articulo.marca}
-                                    </td>
-                                    <td className="px-3 py-2 align-middle text-slate-800">
-                                        {articulo.tipo}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <ArticulosTable articulos={articulosFiltrados} />
             )}
-        </div>
+        </section>
     )
 }
 

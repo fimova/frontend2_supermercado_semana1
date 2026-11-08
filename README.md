@@ -1,16 +1,55 @@
-# React + Vite
+# SuperInventario
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación web para visualizar y gestionar el inventario de un supermercado.
 
-Currently, two official plugins are available:
+## Funcionalidades
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Listado de artículos con información de stock y vencimiento.
+- Filtro de artículos por categoría.
+- Vista de detalle para cada artículo.
+- Formulario para agregar artículos al inventario.
+- Carrito que descuenta del stock las unidades agregadas y las devuelve al disminuir cantidades.
+- Diseño adaptable a pantallas de escritorio, tablet y móvil.
 
-## React Compiler
+## Tecnologías
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React
+- Vite
+- React Router
+- Tailwind CSS v4
+- Context y `useReducer` para el estado compartido
 
-## Expanding the ESLint configuration
+## Ejecutar localmente
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+npm install
+npm run dev
+```
+
+## Comandos disponibles
+
+```bash
+npm run dev
+npm run lint
+npm run build
+npm run preview
+```
+
+## Estructura del proyecto
+
+- `src/components/`: componentes reutilizables de interfaz.
+- `src/context/`: estado global del inventario y del carrito.
+- `src/data/`: artículos iniciales y categorías.
+- `src/hooks/`: hooks personalizados.
+- `src/pages/`: páginas y rutas de la aplicación.
+- `src/utils/`: validaciones, filtros, normalización y lógica del inventario.
+
+## Datos y persistencia
+
+Esta versión no usa un backend ni almacenamiento local. El inventario comienza con datos de demostración y los cambios
+realizados durante la sesión se reinician al recargar la página. Los artículos iniciales usan IDs fijos para que sus enlaces de
+detalle sigan funcionando después de una recarga.
+
+## Publicación
+
+La aplicación se publica en GitHub Pages mediante GitHub Actions.

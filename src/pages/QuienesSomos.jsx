@@ -1,9 +1,9 @@
 function QuienesSomos() {
   return (
     <div className="mx-auto max-w-3xl">
-      <h2 className="mb-4 text-[2rem] font-medium leading-tight text-slate-900">
+      <h1 className="mb-4 text-[2rem] font-medium leading-tight text-slate-900">
         Quiénes somos
-      </h2>
+      </h1>
       <p className="mb-4 leading-relaxed">
         SuperInventario de SuperLow Supermercados es una herramienta creada para 
         supermercados que necesitan tener el control de su inventario de forma simple y

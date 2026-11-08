@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route } from 'react-router'
 import Navbar from './components/Navbar'
 import InventarioMenu from './components/InventarioMenu'
 import Footer from './components/Footer'
@@ -7,6 +7,8 @@ import QuienesSomos from './pages/QuienesSomos'
 import Contacto from './pages/Contacto'
 import NuevoArticulo from './pages/NuevoArticulo'
 import ListaArticulos from './pages/ListaArticulos'
+import DetalleArticulo from './pages/DetalleArticulo'
+import Carrito from './pages/Carrito'
 import NotFound from './pages/NotFound'
 
 function App() {
@@ -25,6 +27,8 @@ function App() {
           {/* Páginas de inventario */}
           <Route path="/inventario/nuevo" element={<NuevoArticulo />} />
           <Route path="/inventario/articulos" element={<ListaArticulos />} />
+          <Route path="/inventario/articulos/:id" element={<DetalleArticulo />} />
+          <Route path="/carrito" element={<Carrito />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

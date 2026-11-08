@@ -1,74 +1,72 @@
-import { useState } from 'react'
-import { useArticulos } from '../hooks/useArticulos'
 import CampoFormulario from '../components/CampoFormulario'
+import MensajeFormulario from '../components/MensajeFormulario'
+import { useArticulos } from '../hooks/useArticulos'
+import { useFormulario } from '../hooks/useFormulario'
+import { normalizarTexto } from '../utils/normalizacion'
 import { validarFormularioNuevoArticulo } from '../utils/validaciones'
-import { normalizarArticulo, normalizarTextoArticulo, } from '../utils/formatoArticulo'
+import { categorias } from '../data/categorias'
+
+const valoresIniciales = {
+    nombre: '',
+    marca: '',
+    tipo: '',
+    stock: '',
+    minimo: '',
+    fechaVencimiento: '',
+}
+
+function normalizarCampo(nombreCampo, valor) {
+    if (['nombre', 'marca', 'tipo'].includes(nombreCampo)) {
+        return normalizarTexto(valor)
+    }
+
+    return String(valor ?? '').trim()
+}
+
+function normalizarDatos(datos) {
+    return {
+        ...datos,
+        nombre: normalizarCampo('nombre', datos.nombre),
+        marca: normalizarCampo('marca', datos.marca),
+        tipo: normalizarCampo('tipo', datos.tipo),
+        stock: normalizarCampo('stock', datos.stock),
+        minimo: normalizarCampo('minimo', datos.minimo),
+        fechaVencimiento: normalizarCampo(
+            'fechaVencimiento',
+            datos.fechaVencimiento,
+        ),
+    }
+}
 
 function NuevoArticulo() {
     const { agregarArticulo } = useArticulos()
 
-    const [form, setForm] = useState({
-        nombre: '',
-        marca: '',
-        tipo: '',
+    const formulario = useFormulario({
+        valoresIniciales,
+        validar: validarFormularioNuevoArticulo,
+        normalizarValores: normalizarDatos,
+        normalizarCampo,
+        onEnviarValido: (datos) => {
+            agregarArticulo(datos)
+
+            return {
+                tipo: 'exito',
+                texto: 'Artículo agregado correctamente al inventario.',
+            }
+        },
     })
 
-    const [mensaje, setMensaje] = useState({
-        texto: '',
-        tipo: '', // 'error' | 'exito' | ''
-    })
-
-    const handleChange = (e) => {
-        const { name, value } = e.target
-        setForm((prev) => ({ ...prev, [name]: value }))
-    }
-
-    const handleSubmit = (e) => {
-        e.preventDefault()
-
-        const articuloNormalizado = normalizarArticulo(form)
-        const resultado = validarFormularioNuevoArticulo(articuloNormalizado)
-
-        setMensaje({
-            texto: resultado.mensaje,
-            tipo: resultado.tipo,
-        })
-
-        if (resultado.tipo === 'exito') {
-            agregarArticulo(articuloNormalizado)
-
-            setForm({
-                nombre: '',
-                marca: '',
-                tipo: '',
-            })
-        }
-    }
-
-    const handleBlur = (e) => {
-        const { name, value } = e.target
-
-        setForm((anterior) => ({
-            ...anterior,
-            [name]: normalizarTextoArticulo(value),
-        }))
-    }
-
-    const claseMensaje =
-        mensaje.tipo === 'error'
-            ? 'mt-4 rounded-md bg-red-100 px-4 py-2 text-sm text-red-800'
-            : mensaje.tipo === 'exito'
-                ? 'mt-4 rounded-md bg-emerald-100 px-4 py-2 text-sm text-emerald-800'
-                : ''
+    const { valores, errores, mensaje, handleChange, handleBlur, handleSubmit } =
+        formulario
 
     return (
-        <div className="mx-auto max-w-lg">
-            <h2 className="mb-3 text-2xl font-semibold text-sea-pine">
+        <section className="mx-auto max-w-lg">
+            <h1 className="mb-3 text-2xl font-semibold text-sea-pine">
                 Agregar nuevo artículo
-            </h2>
-            <p className="mb-6 text-sm text-gray-700">
-                Registra un nuevo artículo para que quede disponible en el
-                inventario del supermercado.
+            </h1>
+
+            <p className="mb-6 text-slate-700">
+                Completa los datos del artículo que quieres registrar.
             </p>
 
             <form onSubmit={handleSubmit} noValidate>
@@ -76,38 +74,87 @@ function NuevoArticulo() {
                     label="Nombre del producto"
                     id="nombre"
                     name="nombre"
-                    value={form.nombre}
+                    value={valores.nombre}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    error={errores.nombre}
+                    required
                 />
 
                 <CampoFormulario
                     label="Marca"
                     id="marca"
                     name="marca"
-                    value={form.marca}
+                    value={valores.marca}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    error={errores.marca}
+                    required
                 />
 
                 <CampoFormulario
-                    label="Tipo de producto"
+                    label="Categoría"
                     id="tipo"
                     name="tipo"
-                    value={form.tipo}
+                    as="select"
+                    opciones={categorias}
+                    placeholderOpcion="Selecciona una categoría"
+                    value={valores.tipo}
                     onChange={handleChange}
                     onBlur={handleBlur}
+                    error={errores.tipo}
+                    required
                 />
 
-                <button type="submit" className="btn-primario">
+                <CampoFormulario
+                    label="Stock actual"
+                    id="stock"
+                    name="stock"
+                    type="number"
+                    min="0"
+                    step="1"
+                    value={valores.stock}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={errores.stock}
+                    required
+                />
+
+                <CampoFormulario
+                    label="Stock mínimo"
+                    id="minimo"
+                    name="minimo"
+                    type="number"
+                    min="0"
+                    step="1"
+                    value={valores.minimo}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={errores.minimo}
+                    required
+                />
+
+                <CampoFormulario
+                    label="Fecha de vencimiento (opcional)"
+                    id="fechaVencimiento"
+                    name="fechaVencimiento"
+                    type="date"
+                    value={valores.fechaVencimiento}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={errores.fechaVencimiento}
+                />
+
+                <button
+                    type="submit"
+                    className="rounded-lg bg-lettuce px-4 py-2 font-semibold text-chocolate transition-colors hover:bg-[#c2cf3f] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-chocolate"
+                >
                     Guardar artículo
                 </button>
             </form>
 
-            {mensaje.texto && (
-                <div className={claseMensaje}>{mensaje.texto}</div>
-            )}
-        </div>
+            <MensajeFormulario mensaje={mensaje} />
+        </section>
     )
 }
 

@@ -1,13 +1,13 @@
-import ProductosTable from './ProductosTable'
+import ArticulosTable from './ArticulosTable'
 
-function InventarioRapido({ productos }) {
+function InventarioRapido({ articulos }) {
     return (
         <section className="rounded-lg border border-black/10 bg-white shadow-sm">
             <div className="p-4">
                 <h2 className="mb-4 text-2xl font-medium text-slate-900">
                     Inventario rápido
                 </h2>
-                <ProductosTable productos={productos} />
+                <ArticulosTable articulos={articulos} />
             </div>
         </section>
     )

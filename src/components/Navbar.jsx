@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router'
 
 const clasesNavLink = ({ isActive }) =>
-  `block px-3 py-2 no-underline transition-colors ${isActive
+  `block px-3 py-2 transition-colors ${isActive
     ? 'text-white font-semibold underline'
-    : 'text-white/70 hover:text-white'
+    : 'text-white/70 no-underline hover:text-white'
   }`
 
 function Navbar() {
@@ -13,7 +13,7 @@ function Navbar() {
   const cerrarMenu = () => setMenuAbierto(false)
 
   return (
-    <nav className="bg-chocolate text-white">
+    <nav aria-label="Navegación principal" className="bg-chocolate text-white">
       <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between px-3 py-2">
         <Link
           className="py-2 text-xl font-semibold text-white no-underline"
@@ -28,10 +28,13 @@ function Navbar() {
           className="rounded border border-white/25 px-3 py-1 text-white/80 transition-colors hover:text-white md:hidden"
           aria-controls="navbarNav"
           aria-expanded={menuAbierto}
-          aria-label="Abrir menú de navegación"
-          onClick={() => setMenuAbierto(!menuAbierto)}
+          aria-label={
+            menuAbierto ? 'Cerrar menú de navegación' : 'Abrir menú de navegación'
+          }
+          onClick={() => setMenuAbierto((abierto) => !abierto)}
         >
           <svg
+            aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6"
             fill="none"

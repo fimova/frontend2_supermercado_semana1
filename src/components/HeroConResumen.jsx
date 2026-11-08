@@ -1,4 +1,5 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router'
+import { Link } from 'react-router'
 import ResumenCard from './ResumenCard'
 
 function HeroConResumen({ resumen }) {
@@ -15,13 +16,12 @@ function HeroConResumen({ resumen }) {
                     ¡Vista clara de todo el inventario!
                 </p>
 
-                <button
-                    type="button"
-                    onClick={() => navigate('/inventario/articulos')}
-                    className="mt-2 rounded-lg bg-lettuce px-4 py-2 text-xl text-chocolate transition-colors hover:bg-[#c2cf3f]"
+                <Link
+                    to="/inventario/articulos"
+                    className="mt-2 inline-block rounded-lg bg-lettuce px-4 py-2 text-xl text-chocolate transition-colors hover:bg-[#c2cf3f]"
                 >
                     Ver inventario
-                </button>
+                </Link>
             </div>
 
             <ResumenCard resumen={resumen} />
