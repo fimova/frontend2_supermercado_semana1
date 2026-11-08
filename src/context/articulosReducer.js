@@ -1,8 +1,5 @@
-import { createContext, useReducer } from 'react'
 import { articulosIniciales } from '../data/articulos'
 import { normalizarArticulo } from '../utils/articulos'
-
-export const ArticulosContext = createContext(null)
 
 export const TIPOS_ACCION = {
     AGREGAR_ARTICULO: 'AGREGAR_ARTICULO',
@@ -11,7 +8,7 @@ export const TIPOS_ACCION = {
     DISMINUIR_CANTIDAD: 'DISMINUIR_CANTIDAD',
 }
 
-function crearEstadoInicial() {
+export function crearEstadoInicial() {
     return {
         articulos: articulosIniciales.map(normalizarArticulo),
         carrito: [],
@@ -20,7 +17,7 @@ function crearEstadoInicial() {
 
 // al agregar se descuenta stock
 // al disminuir se devuelve una unidad al inventario
-function articulosReducer(state, action) {
+export function articulosReducer(state, action) {
     switch (action.type) {
         case TIPOS_ACCION.AGREGAR_ARTICULO:
             return {
@@ -34,7 +31,6 @@ function articulosReducer(state, action) {
                 (item) => item.id === action.articuloId,
             )
 
-            // protege el stock aunque una acción se dispare desde otra pantalla
             if (!articulo || articulo.stock <= 0) return state
 
             const lineaExistente = state.carrito.find(
@@ -91,60 +87,4 @@ function articulosReducer(state, action) {
         default:
             return state
     }
-}
-
-export function ArticulosProvider({ children }) {
-    const [state, dispatch] = useReducer(
-        articulosReducer,
-        null,
-        crearEstadoInicial,
-    )
-
-    const agregarArticulo = (articulo) => {
-        const nuevoArticulo = normalizarArticulo({
-            ...articulo,
-            id: crypto.randomUUID(),
-        })
-
-        dispatch({
-            type: TIPOS_ACCION.AGREGAR_ARTICULO,
-            articulo: nuevoArticulo,
-        })
-    }
-
-    const agregarAlCarrito = (articuloId) => {
-        dispatch({
-            type: TIPOS_ACCION.AGREGAR_AL_CARRITO,
-            articuloId,
-        })
-    }
-
-    const incrementarCantidad = (articuloId) => {
-        dispatch({
-            type: TIPOS_ACCION.INCREMENTAR_CANTIDAD,
-            articuloId,
-        })
-    }
-
-    const disminuirCantidad = (articuloId) => {
-        dispatch({
-            type: TIPOS_ACCION.DISMINUIR_CANTIDAD,
-            articuloId,
-        })
-    }
-
-    return (
-        <ArticulosContext.Provider
-            value={{
-                articulos: state.articulos,
-                carrito: state.carrito,
-                agregarArticulo,
-                agregarAlCarrito,
-                incrementarCantidad,
-                disminuirCantidad,
-            }}
-        >
-            {children}
-        </ArticulosContext.Provider>
-    )
 }

@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { ArticulosContext } from '../context/ArticulosContext'
+import { ArticulosContext } from '../context/ArticulosContext.js'
 
 export function useArticulos() {
   const ctx = useContext(ArticulosContext)

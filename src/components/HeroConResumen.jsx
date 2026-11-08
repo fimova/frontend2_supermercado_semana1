@@ -1,9 +1,7 @@
-import { useNavigate } from 'react-router'
 import { Link } from 'react-router'
 import ResumenCard from './ResumenCard'
 
 function HeroConResumen({ resumen }) {
-    const navigate = useNavigate()
 
     return (
         <section className="mb-6 grid items-start gap-6 md:grid-cols-2">
@@ -15,7 +13,6 @@ function HeroConResumen({ resumen }) {
                 <p className="mb-4 text-xl font-light text-slate-800">
                     ¡Vista clara de todo el inventario!
                 </p>
-
                 <Link
                     to="/inventario/articulos"
                     className="mt-2 inline-block rounded-lg bg-lettuce px-4 py-2 text-xl text-chocolate transition-colors hover:bg-[#c2cf3f]"

@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router'
 import App from './App.jsx'
 import './index.css'
-import { ArticulosProvider } from './context/ArticulosContext'
+import { ArticulosProvider } from './context/ArticulosProvider.jsx'
 
 const basename = import.meta.env.BASE_URL.replace(/\/$/, '') || '/'
 

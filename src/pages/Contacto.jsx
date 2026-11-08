@@ -44,7 +44,7 @@ function Contacto() {
     normalizarCampo,
     onEnviarValido: () => ({
       tipo: 'exito',
-      texto: 'Validación completada. El mensaje no se envía a un servidor.',
+      texto: 'Mensaje enviado con éxito.', //el mensaje no es enviado a un servidor real
     }),
   })
 
